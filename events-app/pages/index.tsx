@@ -1,5 +1,3 @@
-import { gql } from "@apollo/client";
-import client from "../apollo-client";
 import { useQuery } from "@apollo/client";
 import EVENTS_QUERY from "./EventsQuery.graphql";
 
