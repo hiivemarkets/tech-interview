@@ -66,4 +66,5 @@ group :test do
   gem "selenium-webdriver"
 end
 
+gem "rack-cors"
 gem "rails-graphql", "~> 1.0"
