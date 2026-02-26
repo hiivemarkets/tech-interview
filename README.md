@@ -26,6 +26,13 @@ The starter project used the `rails-graphql` gem. I switched to `graphql-ruby`
 for broader community support, better documentation, and built-in ActionCable
 subscription support via `GraphQL::Subscriptions::ActionCableSubscriptions`.
 
+### Generated TypeScript types from the schema
+
+The frontend uses GraphQL Code Generator to produce TypeScript types directly
+from the backend schema. This closes the loop on type safety -- the schema is the
+single source of truth, and any drift between backend fields and frontend usage
+is caught at compile time rather than runtime.
+
 ### Bid validation at the model layer
 
 Bid validity (auction still active, amount meets minimum) is enforced in model
@@ -44,6 +51,19 @@ bin/rails server -p 3001
 cd auction-client
 npm run dev
 ```
+
+## Updating the GraphQL schema
+
+After changing types, queries, or mutations on the backend:
+
+```
+cd auction_api_rb
+bin/rails graphql:export
+```
+
+This dumps the schema to `auction-client/schema.graphql` and regenerates
+`lib/generated/graphql.ts` with typed versions of every operation defined in
+`lib/operations.ts`.
 
 ## Tests
 
