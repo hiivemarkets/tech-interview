@@ -33,6 +33,23 @@ from the backend schema. This closes the loop on type safety -- the schema is th
 single source of truth, and any drift between backend fields and frontend usage
 is caught at compile time rather than runtime.
 
+### Client-side countdown from server-provided `endsAt`
+
+During the interview I proposed having the server push remaining time to ensure
+the backend is the source of truth for auction timing. After implementation I
+found this isn't necessary. The server's `endsAt` timestamp is already
+authoritative and immutable -- it's set once at auction creation and never
+changes. The client receives it via the initial query, then uses its local clock
+only to interpolate a visual countdown between that fixed endpoint and now.
+
+Pushing `secondsRemaining` on every subscription update (or worse, every second)
+would turn a sparse event-driven subscription into a polling-like system with 30
+triggers per auction per subscriber, for no real gain. The only scenario it helps
+is significant client clock skew, and even then network latency on each push
+makes the correction approximate. The actual auction-closed enforcement lives in
+the `Bid` model validation, so a slightly wrong countdown display is cosmetic,
+not a correctness issue.
+
 ### Bid validation at the model layer
 
 Bid validity (auction still active, amount meets minimum) is enforced in model
