@@ -3,11 +3,9 @@ import { useMutation } from "@apollo/client";
 import { CREATE_AUCTION } from "@/lib/operations";
 
 export function CreateAuctionForm({
-  userId,
   onCreated,
   onError,
 }: {
-  userId: string;
   onCreated: () => void;
   onError: (msg: string) => void;
 }) {
@@ -22,7 +20,6 @@ export function CreateAuctionForm({
       try {
         const { data } = await createAuction({
           variables: { itemName: itemName.trim() },
-          context: { headers: { "X-User-Id": userId } },
         });
         if (data.createAuction.errors?.length > 0) {
           onError(data.createAuction.errors.join(", "));
@@ -34,7 +31,7 @@ export function CreateAuctionForm({
         onError(err.message);
       }
     },
-    [itemName, userId, createAuction, onCreated, onError]
+    [itemName, createAuction, onCreated, onError]
   );
 
   return (

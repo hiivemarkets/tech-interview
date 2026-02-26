@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_ACTIVE_AUCTION, PLACE_BID } from "@/lib/operations";
 import type { Auction, User } from "@/lib/generated/graphql";
+import { setCurrentUserId } from "@/lib/auth";
 import { ErrorBanner } from "@/components/ErrorBanner";
 import { CreateUserForm } from "@/components/CreateUserForm";
 import { CreateAuctionForm } from "@/components/CreateAuctionForm";
@@ -9,6 +10,11 @@ import { AuctionDisplay } from "@/components/AuctionDisplay";
 
 export default function Home() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+
+  const handleUserCreated = useCallback((user: User) => {
+    setCurrentUser(user);
+    setCurrentUserId(user.id);
+  }, []);
   const [bidFeedback, setBidFeedback] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
@@ -29,7 +35,6 @@ export default function Home() {
     try {
       const { data } = await placeBid({
         variables: { auctionId: auction.id },
-        context: { headers: { "X-User-Id": currentUser.id } },
       });
       if (data.placeBid.errors?.length > 0) {
         setErrorMsg(data.placeBid.errors.join(", "));
@@ -54,7 +59,7 @@ export default function Home() {
 
       {!currentUser ? (
         <CreateUserForm
-          onUserCreated={setCurrentUser}
+          onUserCreated={handleUserCreated}
           onError={setErrorMsg}
         />
       ) : (
@@ -67,7 +72,6 @@ export default function Home() {
 
       {currentUser && !auction && !auctionLoading && (
         <CreateAuctionForm
-          userId={currentUser.id}
           onCreated={refetchAuction}
           onError={setErrorMsg}
         />
