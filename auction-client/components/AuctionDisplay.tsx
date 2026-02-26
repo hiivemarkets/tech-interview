@@ -7,12 +7,14 @@ import type { Auction, User } from "@/lib/generated/graphql";
 export function AuctionDisplay({
   auction,
   currentUser,
+  isAuctioneer,
   onBid,
   bidLoading,
   bidFeedback,
 }: {
   auction: Auction;
   currentUser: User;
+  isAuctioneer: boolean;
   onBid: () => void;
   bidLoading: boolean;
   bidFeedback: string | null;
@@ -55,25 +57,32 @@ export function AuctionDisplay({
         <div className="mt-4 flex items-center justify-between">
           <div className="flex items-center gap-x-3">
             <StatusBadge active={auction.active} secondsLeft={secondsLeft} />
-            {isWinning && (
+            {isAuctioneer && (
+              <span className="text-sm font-medium text-amber-600">
+                You are the auctioneer
+              </span>
+            )}
+            {!isAuctioneer && isWinning && (
               <span className="text-sm font-medium text-green-600">
                 You are the high bidder
               </span>
             )}
           </div>
-          <div className="flex items-center gap-x-3">
-            <span className="text-sm text-gray-500">
-              Next bid: ${auction.minimumBid}
-            </span>
-            <button
-              type="button"
-              onClick={onBid}
-              disabled={bidLoading}
-              className="inline-flex items-center gap-x-2 rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50"
-            >
-              Bid ${auction.minimumBid}
-            </button>
-          </div>
+          {!isAuctioneer && (
+            <div className="flex items-center gap-x-3">
+              <span className="text-sm text-gray-500">
+                Next bid: ${auction.minimumBid}
+              </span>
+              <button
+                type="button"
+                onClick={onBid}
+                disabled={bidLoading}
+                className="inline-flex items-center gap-x-2 rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50"
+              >
+                Bid ${auction.minimumBid}
+              </button>
+            </div>
+          )}
         </div>
       ) : (
         <div className="mt-4 rounded-md bg-gray-50 p-4 text-center">

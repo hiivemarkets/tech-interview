@@ -9,6 +9,10 @@ export const GET_ACTIVE_AUCTION = gql`
       currentBid
       minimumBid
       active
+      auctioneer {
+        id
+        name
+      }
       winningBid {
         id
         amount
@@ -62,6 +66,10 @@ export const AUCTION_UPDATED = gql`
         currentBid
         minimumBid
         active
+        auctioneer {
+          id
+          name
+        }
         winningBid {
           id
           amount
@@ -85,6 +93,10 @@ export const AUCTION_ENDED = gql`
         currentBid
         minimumBid
         active
+        auctioneer {
+          id
+          name
+        }
         winningBid {
           id
           amount

@@ -25,6 +25,7 @@ export default function Home() {
   } = useQuery(GET_ACTIVE_AUCTION, { pollInterval: 5000 });
 
   const auction: Auction | null = auctionData?.activeAuction ?? null;
+  const isAuctioneer = !!(currentUser && auction && auction.auctioneer.id === currentUser.id);
   const [placeBid, { loading: placeBidLoading }] = useMutation(PLACE_BID);
 
   const handlePlaceBid = useCallback(async () => {
@@ -70,21 +71,30 @@ export default function Home() {
         </div>
       )}
 
-      {currentUser && !auction && !auctionLoading && (
-        <CreateAuctionForm
-          onCreated={refetchAuction}
-          onError={setErrorMsg}
-        />
-      )}
-
       {currentUser && auction && (
         <AuctionDisplay
           auction={auction}
           currentUser={currentUser}
+          isAuctioneer={isAuctioneer}
           onBid={handlePlaceBid}
           bidLoading={placeBidLoading}
           bidFeedback={bidFeedback}
         />
+      )}
+
+      {currentUser && !auction && !auctionLoading && (
+        <div className="mx-auto max-w-3xl">
+          <div className="rounded-md bg-gray-50 p-6 text-center mb-8">
+            <p className="text-lg font-medium text-gray-700">No active auction right now</p>
+            <p className="mt-1 text-sm text-gray-500">
+              Wait for one to start, or create your own below.
+            </p>
+          </div>
+          <CreateAuctionForm
+            onCreated={refetchAuction}
+            onError={setErrorMsg}
+          />
+        </div>
       )}
 
       {!currentUser && auction && (

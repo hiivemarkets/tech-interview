@@ -9,6 +9,7 @@ module Types
     field :minimum_bid, Integer, null: false
     field :winning_bid, Types::BidType, null: true
     field :active, Boolean, null: false
+    field :auctioneer, Types::UserType, null: false
 
     def active
       object.active?

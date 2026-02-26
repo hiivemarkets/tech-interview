@@ -19,6 +19,7 @@ export type Scalars = {
 export type Auction = {
   __typename?: 'Auction';
   active: Scalars['Boolean']['output'];
+  auctioneer: User;
   currentBid: Scalars['Int']['output'];
   endsAt: Scalars['ISO8601DateTime']['output'];
   id: Scalars['ID']['output'];
@@ -121,7 +122,7 @@ export type User = {
 export type GetActiveAuctionQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetActiveAuctionQuery = { __typename?: 'Query', activeAuction?: { __typename?: 'Auction', id: string, itemName: string, endsAt: any, currentBid: number, minimumBid: number, active: boolean, winningBid?: { __typename?: 'Bid', id: string, amount: number, user: { __typename?: 'User', id: string, name: string } } | null } | null };
+export type GetActiveAuctionQuery = { __typename?: 'Query', activeAuction?: { __typename?: 'Auction', id: string, itemName: string, endsAt: any, currentBid: number, minimumBid: number, active: boolean, auctioneer: { __typename?: 'User', id: string, name: string }, winningBid?: { __typename?: 'Bid', id: string, amount: number, user: { __typename?: 'User', id: string, name: string } } | null } | null };
 
 export type CreateUserMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -149,11 +150,11 @@ export type AuctionUpdatedSubscriptionVariables = Exact<{
 }>;
 
 
-export type AuctionUpdatedSubscription = { __typename?: 'Subscription', auctionUpdated: { __typename?: 'AuctionUpdatedPayload', auction: { __typename?: 'Auction', id: string, itemName: string, endsAt: any, currentBid: number, minimumBid: number, active: boolean, winningBid?: { __typename?: 'Bid', id: string, amount: number, user: { __typename?: 'User', id: string, name: string } } | null } } };
+export type AuctionUpdatedSubscription = { __typename?: 'Subscription', auctionUpdated: { __typename?: 'AuctionUpdatedPayload', auction: { __typename?: 'Auction', id: string, itemName: string, endsAt: any, currentBid: number, minimumBid: number, active: boolean, auctioneer: { __typename?: 'User', id: string, name: string }, winningBid?: { __typename?: 'Bid', id: string, amount: number, user: { __typename?: 'User', id: string, name: string } } | null } } };
 
 export type AuctionEndedSubscriptionVariables = Exact<{
   auctionId: Scalars['ID']['input'];
 }>;
 
 
-export type AuctionEndedSubscription = { __typename?: 'Subscription', auctionEnded: { __typename?: 'AuctionEndedPayload', auction: { __typename?: 'Auction', id: string, itemName: string, endsAt: any, currentBid: number, minimumBid: number, active: boolean, winningBid?: { __typename?: 'Bid', id: string, amount: number, user: { __typename?: 'User', id: string, name: string } } | null } } };
+export type AuctionEndedSubscription = { __typename?: 'Subscription', auctionEnded: { __typename?: 'AuctionEndedPayload', auction: { __typename?: 'Auction', id: string, itemName: string, endsAt: any, currentBid: number, minimumBid: number, active: boolean, auctioneer: { __typename?: 'User', id: string, name: string }, winningBid?: { __typename?: 'Bid', id: string, amount: number, user: { __typename?: 'User', id: string, name: string } } | null } } };
