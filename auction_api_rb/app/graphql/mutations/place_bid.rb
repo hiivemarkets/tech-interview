@@ -17,7 +17,7 @@ module Mutations
 
       bid = auction.bids.new(user: user, amount: auction.minimum_bid)
       if bid.save
-        AuctionApiRbSchema.subscriptions.trigger(:auction_updated, { auction_id: auction.id }, auction.reload)
+        AuctionApiRbSchema.subscriptions&.trigger(:auction_updated, { auction_id: auction.id }, auction.reload)
         { auction: auction, bid: bid, errors: [] }
       else
         { auction: auction, bid: nil, errors: bid.errors.full_messages }

@@ -5,7 +5,8 @@ class AuctionApiRbSchema < GraphQL::Schema
   mutation Types::MutationType
   subscription Types::SubscriptionType
 
-  use GraphQL::Subscriptions::ActionCableSubscriptions
+  use GraphQL::Subscriptions::ActionCableSubscriptions,
+    action_cable: Rails.env.test? ? GraphQL::Testing::MockActionCable : ActionCable
 
   max_query_string_tokens(5000)
   validate_max_errors(100)
