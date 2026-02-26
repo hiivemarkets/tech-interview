@@ -6,16 +6,24 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "codegen": "graphql-codegen"
   },
   "dependencies": {
     "@apollo/client": "^3.10.1",
+    "@rails/actioncable": "^8.1.200",
+    "graphql": "^16.13.0",
+    "graphql-ruby-client": "^1.14.9",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^6.1.2",
+    "@graphql-codegen/typescript": "^5.0.8",
+    "@graphql-codegen/typescript-operations": "^5.0.8",
     "@types/node": "^20",
+    "@types/rails__actioncable": "^8.0.3",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
