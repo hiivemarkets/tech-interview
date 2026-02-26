@@ -36,22 +36,6 @@ export const CREATE_USER = gql`
 export const CREATE_AUCTION = gql`
   mutation CreateAuction($itemName: String!) {
     createAuction(itemName: $itemName) {
-      auction {
-        id
-        itemName
-        endsAt
-        currentBid
-        minimumBid
-        active
-        winningBid {
-          id
-          amount
-          user {
-            id
-            name
-          }
-        }
-      }
       errors
     }
   }
@@ -60,29 +44,8 @@ export const CREATE_AUCTION = gql`
 export const PLACE_BID = gql`
   mutation PlaceBid($auctionId: ID!) {
     placeBid(auctionId: $auctionId) {
-      auction {
-        id
-        itemName
-        endsAt
-        currentBid
-        minimumBid
-        active
-        winningBid {
-          id
-          amount
-          user {
-            id
-            name
-          }
-        }
-      }
       bid {
-        id
         amount
-        user {
-          id
-          name
-        }
       }
       errors
     }

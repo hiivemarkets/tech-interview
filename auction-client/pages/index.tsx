@@ -35,13 +35,12 @@ export default function Home() {
         setErrorMsg(data.placeBid.errors.join(", "));
       } else {
         setBidFeedback(`Bid of $${data.placeBid.bid.amount} placed successfully!`);
-        refetchAuction();
         setTimeout(() => setBidFeedback(null), 3000);
       }
     } catch (err: any) {
       setErrorMsg(err.message);
     }
-  }, [auction, currentUser, placeBid, refetchAuction]);
+  }, [auction, currentUser, placeBid]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">

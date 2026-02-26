@@ -135,14 +135,14 @@ export type CreateAuctionMutationVariables = Exact<{
 }>;
 
 
-export type CreateAuctionMutation = { __typename?: 'Mutation', createAuction?: { __typename?: 'CreateAuctionPayload', errors?: Array<string> | null, auction?: { __typename?: 'Auction', id: string, itemName: string, endsAt: any, currentBid: number, minimumBid: number, active: boolean, winningBid?: { __typename?: 'Bid', id: string, amount: number, user: { __typename?: 'User', id: string, name: string } } | null } | null } | null };
+export type CreateAuctionMutation = { __typename?: 'Mutation', createAuction?: { __typename?: 'CreateAuctionPayload', errors?: Array<string> | null } | null };
 
 export type PlaceBidMutationVariables = Exact<{
   auctionId: Scalars['ID']['input'];
 }>;
 
 
-export type PlaceBidMutation = { __typename?: 'Mutation', placeBid?: { __typename?: 'PlaceBidPayload', errors?: Array<string> | null, auction?: { __typename?: 'Auction', id: string, itemName: string, endsAt: any, currentBid: number, minimumBid: number, active: boolean, winningBid?: { __typename?: 'Bid', id: string, amount: number, user: { __typename?: 'User', id: string, name: string } } | null } | null, bid?: { __typename?: 'Bid', id: string, amount: number, user: { __typename?: 'User', id: string, name: string } } | null } | null };
+export type PlaceBidMutation = { __typename?: 'Mutation', placeBid?: { __typename?: 'PlaceBidPayload', errors?: Array<string> | null, bid?: { __typename?: 'Bid', amount: number } | null } | null };
 
 export type AuctionUpdatedSubscriptionVariables = Exact<{
   auctionId: Scalars['ID']['input'];
