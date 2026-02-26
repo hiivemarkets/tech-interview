@@ -1,8 +1,8 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_ACTIVE_AUCTION, PLACE_BID } from "@/lib/operations";
 import type { Auction, User } from "@/lib/generated/graphql";
-import { setCurrentUserId } from "@/lib/auth";
+import { setCurrentUser as persistUser, getStoredUser } from "@/lib/auth";
 import { ErrorBanner } from "@/components/ErrorBanner";
 import { CreateUserForm } from "@/components/CreateUserForm";
 import { CreateAuctionForm } from "@/components/CreateAuctionForm";
@@ -11,9 +11,13 @@ import { AuctionDisplay } from "@/components/AuctionDisplay";
 export default function Home() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
+  useEffect(() => {
+    setCurrentUser(getStoredUser());
+  }, []);
+
   const handleUserCreated = useCallback((user: User) => {
     setCurrentUser(user);
-    setCurrentUserId(user.id);
+    persistUser(user);
   }, []);
   const [bidFeedback, setBidFeedback] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);

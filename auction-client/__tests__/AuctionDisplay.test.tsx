@@ -14,6 +14,7 @@ jest.mock("@/hooks/useCountdown", () => ({
 }));
 
 const user: User = { __typename: "User", id: "1", name: "Alice" };
+const auctioneer: User = { __typename: "User", id: "99", name: "Seller" };
 
 function buildAuction(overrides: Partial<Auction> = {}): Auction {
   return {
@@ -24,6 +25,7 @@ function buildAuction(overrides: Partial<Auction> = {}): Auction {
     minimumBid: 55,
     endsAt: new Date(Date.now() + 15_000).toISOString(),
     active: true,
+    auctioneer,
     winningBid: null,
     ...overrides,
   };
@@ -35,6 +37,7 @@ describe("active auction", () => {
       <AuctionDisplay
         auction={buildAuction()}
         currentUser={user}
+        isAuctioneer={false}
         onBid={jest.fn()}
         bidLoading={false}
         bidFeedback={null}
@@ -55,6 +58,7 @@ describe("active auction", () => {
       <AuctionDisplay
         auction={auction}
         currentUser={user}
+        isAuctioneer={false}
         onBid={jest.fn()}
         bidLoading={false}
         bidFeedback={null}
@@ -74,6 +78,7 @@ describe("active auction", () => {
       <AuctionDisplay
         auction={auction}
         currentUser={user}
+        isAuctioneer={false}
         onBid={jest.fn()}
         bidLoading={false}
         bidFeedback={null}
@@ -89,6 +94,7 @@ describe("active auction", () => {
       <AuctionDisplay
         auction={buildAuction()}
         currentUser={user}
+        isAuctioneer={false}
         onBid={onBid}
         bidLoading={false}
         bidFeedback={null}
@@ -104,6 +110,7 @@ describe("active auction", () => {
       <AuctionDisplay
         auction={buildAuction()}
         currentUser={user}
+        isAuctioneer={false}
         onBid={jest.fn()}
         bidLoading={true}
         bidFeedback={null}
@@ -118,6 +125,7 @@ describe("active auction", () => {
       <AuctionDisplay
         auction={buildAuction()}
         currentUser={user}
+        isAuctioneer={false}
         onBid={jest.fn()}
         bidLoading={false}
         bidFeedback="Bid of $55 placed successfully!"
@@ -125,6 +133,22 @@ describe("active auction", () => {
     );
 
     expect(screen.getByText("Bid of $55 placed successfully!")).toBeInTheDocument();
+  });
+
+  it("hides bid button and shows auctioneer label for the auctioneer", () => {
+    render(
+      <AuctionDisplay
+        auction={buildAuction()}
+        currentUser={auctioneer}
+        isAuctioneer={true}
+        onBid={jest.fn()}
+        bidLoading={false}
+        bidFeedback={null}
+      />
+    );
+
+    expect(screen.getByText("You are the auctioneer")).toBeInTheDocument();
+    expect(screen.queryByText("Bid $55")).not.toBeInTheDocument();
   });
 });
 
@@ -139,6 +163,7 @@ describe("ended auction", () => {
       <AuctionDisplay
         auction={auction}
         currentUser={user}
+        isAuctioneer={false}
         onBid={jest.fn()}
         bidLoading={false}
         bidFeedback={null}
@@ -156,6 +181,7 @@ describe("ended auction", () => {
       <AuctionDisplay
         auction={auction}
         currentUser={user}
+        isAuctioneer={false}
         onBid={jest.fn()}
         bidLoading={false}
         bidFeedback={null}
@@ -175,6 +201,7 @@ describe("ended auction", () => {
       <AuctionDisplay
         auction={auction}
         currentUser={user}
+        isAuctioneer={false}
         onBid={jest.fn()}
         bidLoading={false}
         bidFeedback={null}
