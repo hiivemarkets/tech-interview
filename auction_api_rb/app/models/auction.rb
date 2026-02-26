@@ -10,8 +10,14 @@ class Auction < ApplicationRecord
 
   scope :active, -> { where("ends_at > ?", Time.current) }
 
+  after_create_commit -> { AuctionEndedJob.set(wait_until: ends_at).perform_later(id) }
+
   def self.current
-    active.first || nil  
+    active.first || nil
+  end
+
+  def active?
+    ends_at > Time.current
   end
 
   def no_active_auction_exists

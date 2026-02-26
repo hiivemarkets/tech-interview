@@ -37,4 +37,30 @@ class BidTest < ActiveSupport::TestCase
     bid = Bid.new(auction: @auction, user: @bidder, amount: 110)
     assert bid.valid?
   end
+
+  test "invalid when auction has ended" do
+    @auction.update_column(:ends_at, 1.second.ago)
+    bid = Bid.new(auction: @auction, user: @bidder, amount: 1)
+    assert_not bid.valid?
+    assert_includes bid.errors[:base], "Auction has ended"
+  end
+
+  test "invalid when amount is below minimum bid" do
+    @auction.bids.create!(user: User.create!(name: "Other"), amount: 100)
+    bid = Bid.new(auction: @auction, user: @bidder, amount: 5)
+    assert_not bid.valid?
+    assert bid.errors[:amount].any? { |msg| msg.include?("at least") }
+  end
+
+  test "valid when amount equals minimum bid" do
+    @auction.bids.create!(user: User.create!(name: "Other"), amount: 90)
+    bid = Bid.new(auction: @auction, user: @bidder, amount: 91)
+    assert bid.valid?
+  end
+
+  test "valid when amount exceeds minimum bid" do
+    @auction.bids.create!(user: User.create!(name: "Other"), amount: 90)
+    bid = Bid.new(auction: @auction, user: @bidder, amount: 200)
+    assert bid.valid?
+  end
 end

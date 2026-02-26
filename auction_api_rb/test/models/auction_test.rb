@@ -50,9 +50,9 @@ class AuctionTest < ActiveSupport::TestCase
   test "current_bid returns highest bid amount" do
     auction = Auction.create!(item_name: "Slinky", auctioneer: @auctioneer)
     bidder = User.create!(name: "Stella")
+    auction.bids.create!(user: bidder, amount: 1)
     auction.bids.create!(user: bidder, amount: 5)
     auction.bids.create!(user: bidder, amount: 15)
-    auction.bids.create!(user: bidder, amount: 10)
     assert_equal 15, auction.current_bid
   end
 
@@ -140,5 +140,15 @@ class AuctionTest < ActiveSupport::TestCase
   test "current returns nil when no auction is active" do
     Auction.create!(item_name: "Old", auctioneer: @auctioneer, ends_at: 1.minute.ago)
     assert_nil Auction.current
+  end
+
+  test "active? returns true when auction has not ended" do
+    auction = Auction.create!(item_name: "Live", auctioneer: @auctioneer)
+    assert auction.active?
+  end
+
+  test "active? returns false when auction has ended" do
+    auction = Auction.create!(item_name: "Expired", auctioneer: @auctioneer, ends_at: 1.second.ago)
+    assert_not auction.active?
   end
 end
