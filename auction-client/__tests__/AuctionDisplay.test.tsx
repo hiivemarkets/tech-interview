@@ -105,6 +105,54 @@ describe("active auction", () => {
     expect(onBid).toHaveBeenCalledTimes(1);
   });
 
+  it("confirms before bidding when user is already the high bidder", async () => {
+    const onBid = jest.fn();
+    const auction = buildAuction({
+      winningBid: { __typename: "Bid", id: "10", amount: 50, user, createdAt: "" },
+    });
+
+    window.confirm = jest.fn(() => true);
+
+    render(
+      <AuctionDisplay
+        auction={auction}
+        currentUser={user}
+        isAuctioneer={false}
+        onBid={onBid}
+        bidLoading={false}
+        bidFeedback={null}
+      />
+    );
+
+    await userEvent.click(screen.getByText("Bid $55"));
+    expect(window.confirm).toHaveBeenCalledWith("You are already the high bidder. Bid again?");
+    expect(onBid).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not bid when high bidder declines confirmation", async () => {
+    const onBid = jest.fn();
+    const auction = buildAuction({
+      winningBid: { __typename: "Bid", id: "10", amount: 50, user, createdAt: "" },
+    });
+
+    window.confirm = jest.fn(() => false);
+
+    render(
+      <AuctionDisplay
+        auction={auction}
+        currentUser={user}
+        isAuctioneer={false}
+        onBid={onBid}
+        bidLoading={false}
+        bidFeedback={null}
+      />
+    );
+
+    await userEvent.click(screen.getByText("Bid $55"));
+    expect(window.confirm).toHaveBeenCalled();
+    expect(onBid).not.toHaveBeenCalled();
+  });
+
   it("disables bid button while loading", () => {
     render(
       <AuctionDisplay

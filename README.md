@@ -18,6 +18,22 @@
 - [x] When the auction closes, users should be able to see the winning bid
       amount and if they won.
 
+## UI/UX Enhancements
+
+Beyond the core requirements, I added several improvements to make the
+experience feel more complete:
+
+- **Role-aware UI:** The auctioneer sees their auction without a bid button
+  (labeled "You are the auctioneer"), while bidders see the full bidding
+  interface. This prevents the confusing scenario of bidding on your own item.
+- **High-bidder confirmation:** If you're already the high bidder and click
+  "Bid" again, a confirmation dialog asks if you're sure -- guarding against
+  accidental self-outbids.
+- **Session persistence:** User identity is stored in `sessionStorage` so a
+  page reload doesn't force you to re-create your account mid-auction.
+- **Configurable auction duration:** The 30-second default can be overridden
+  via `AUCTION_DURATION_SECONDS` for easier local testing and demos.
+
 ## Architecture Decisions
 
 ### GraphQL subscriptions over raw ActionCable
