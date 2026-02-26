@@ -27,7 +27,8 @@ class Auction < ApplicationRecord
   end
 
   def set_ends_at
-    self.ends_at ||= 30.seconds.from_now
+    duration = (ENV["AUCTION_DURATION_SECONDS"] || 30).to_i
+    self.ends_at ||= duration.seconds.from_now
   end
 
   def current_bid

@@ -2,32 +2,33 @@
 
 ## Requirements
 
-- [x] A user can hit a button to open bidding and begin the auction. This user is
-  the auctioneer. The auctioneer identifies the item with a name.
-- [x] Other non-auctioneer users can hit a button to bid on the item. Hitting the
-  button should place a new bid for that user at the current winning bid plus
-  the current minimum increment.
-- [x] The minimum increment is the previous power of ten. Example: if the current
-  bid is $90, the next minimum bid is $91. If the current bid is $100, the next
-  minimum bid is $110.
+- [x] A user can hit a button to open bidding and begin the auction. This user
+      is the auctioneer. The auctioneer identifies the item with a name.
+- [x] Other non-auctioneer users can hit a button to bid on the item. Hitting
+      the button should place a new bid for that user at the current winning bid
+      plus the current minimum increment.
+- [x] The minimum increment is the previous power of ten. Example: if the
+      current bid is $90, the next minimum bid is $91. If the current bid is
+      $100, the next minimum bid is $110.
 - [x] Users should see a confirmation their bid was placed successfully. Bids
-  should be placed successfully if (1) the auction has not yet closed and (2)
-  the bid exceeds the current minimum increment. Users can see the current
-  winning bid, whether that bid is theirs, and when the auction closes.
-- [x] When the auction closes, users should be able to see the winning bid amount
-  and if they won.
+      should be placed successfully if (1) the auction has not yet closed and
+      (2) the bid exceeds the current minimum increment. Users can see the
+      current winning bid, whether that bid is theirs, and when the auction
+      closes.
+- [x] When the auction closes, users should be able to see the winning bid
+      amount and if they won.
 
 ## Architecture Decisions
 
 ### GraphQL subscriptions over raw ActionCable
 
-The original implementation used ActionCable's `stream_for` to manually broadcast
-auction updates. I replaced this with GraphQL subscriptions backed by ActionCable
-as the transport layer.
+The original implementation used ActionCable's `stream_for` to manually
+broadcast auction updates. I replaced this with GraphQL subscriptions backed by
+ActionCable as the transport layer.
 
-The key benefit is a single typed contract between frontend and backend. With raw
-ActionCable, you're hand-building payload hashes on the server and hoping the
-client parses them correctly -- field name mismatches (`winning_bid` vs
+The key benefit is a single typed contract between frontend and backend. With
+raw ActionCable, you're hand-building payload hashes on the server and hoping
+the client parses them correctly -- field name mismatches (`winning_bid` vs
 `winningBid`), missing fields, or shape changes only surface at runtime. With
 GraphQL subscriptions, the client's subscription query declares exactly what it
 needs, the server resolves it through the same type system as queries and
@@ -46,9 +47,9 @@ subscription support via `GraphQL::Subscriptions::ActionCableSubscriptions`.
 ### Generated TypeScript types from the schema
 
 The frontend uses GraphQL Code Generator to produce TypeScript types directly
-from the backend schema. This closes the loop on type safety -- the schema is the
-single source of truth, and any drift between backend fields and frontend usage
-is caught at compile time rather than runtime.
+from the backend schema. This closes the loop on type safety -- the schema is
+the single source of truth, and any drift between backend fields and frontend
+usage is caught at compile time rather than runtime.
 
 ### Client-side countdown from server-provided `endsAt`
 
@@ -61,19 +62,19 @@ only to interpolate a visual countdown between that fixed endpoint and now.
 
 Pushing `secondsRemaining` on every subscription update (or worse, every second)
 would turn a sparse event-driven subscription into a polling-like system with 30
-triggers per auction per subscriber, for no real gain. The only scenario it helps
-is significant client clock skew, and even then network latency on each push
-makes the correction approximate. The actual auction-closed enforcement lives in
-the `Bid` model validation, so a slightly wrong countdown display is cosmetic,
-not a correctness issue.
+triggers per auction per subscriber, for no real gain. The only scenario it
+helps is significant client clock skew, and even then network latency on each
+push makes the correction approximate. The actual auction-closed enforcement
+lives in the `Bid` model validation, so a slightly wrong countdown display is
+cosmetic, not a correctness issue.
 
 ### Subscriptions as the single update path
 
 Mutations return only what the caller needs (errors, bid amount) and don't
 duplicate the full auction state. Cache updates for all connected clients come
 through the GraphQL subscriptions, which return the complete `Auction` type.
-This avoids three redundant update mechanisms (mutation response, manual refetch,
-and subscription) all writing the same data.
+This avoids three redundant update mechanisms (mutation response, manual
+refetch, and subscription) all writing the same data.
 
 ### Polling for new-auction discovery
 
@@ -99,6 +100,13 @@ bin/rails server -p 3001
 # Frontend (port 3000)
 cd auction-client
 npm run dev
+```
+
+Auctions default to 30 seconds, which is annoyingly short for manual testing.
+Set `AUCTION_DURATION_SECONDS` to extend it:
+
+```
+AUCTION_DURATION_SECONDS=300 bin/rails server -p 3001
 ```
 
 ## Updating the GraphQL schema
@@ -136,8 +144,8 @@ order of effort:
 
 1. **Debounce subscription renders on the client** (~500ms batching) so the UI
    updates at a human-readable pace instead of every message.
-2. **Optimistic UI on bid placement** -- disable the button and show confirmation
-   immediately, don't wait for the subscription round-trip.
+2. **Optimistic UI on bid placement** -- disable the button and show
+   confirmation immediately, don't wait for the subscription round-trip.
 3. **Throttle subscription triggers on the server** -- batch so at most one
    `auction_updated` fires per 500ms, cutting fan-out proportionally.
 4. **Simplify the bid button** -- show "Place Bid" instead of "Bid $91" since
@@ -165,6 +173,11 @@ query in the app, making the entire frontend fully event-driven.
 ## Tests
 
 ```
+# Backend
 cd auction_api_rb
 bin/rails test
+
+# Frontend
+cd auction-client
+npm test
 ```
