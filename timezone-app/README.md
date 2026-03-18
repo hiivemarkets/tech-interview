@@ -6,10 +6,6 @@ First, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -20,5 +16,5 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 
 ## Testing
 
-To run tests, ensure that the development server is running in background. Then, run `npm run e2e` or `yarn e2e` to execute tests. If this is your first time running Playwright tests, you should run `npx playwright install` or `yarn playwright install` to install browser binaries.
+To run tests, ensure that the development server is running in background. Then, run `npm run e2e` to execute tests. If this is your first time running Playwright tests, you should run `npx playwright install` to install browser binaries.
 
