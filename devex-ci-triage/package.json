@@ -1,0 +1,16 @@
+{
+  "name": "ci-triage-interview",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "DevEx interview: a GitHub Action that triages failed CI jobs and comments on the PR.",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "reset": "rm -f .comments.json && echo 'PR comments cleared.'"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.6.0"
+  }
+}
