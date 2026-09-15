@@ -58,7 +58,7 @@ Start simple — get a plain comment posting first, then make it good. There's n
 
 ## Submitting
 
-Aim for a few focused hours; please don't sink more than ~3 days into it. If you run out of time, leave a note on what you'd do next — we'd rather see a clear stopping point than an all-nighter.
+Aim for a few focused hours. If you run out of time, leave a note on what you'd do next — we'd rather see a clear stopping point than an all-nighter.
 
 **AI tools.** Use them. This role is about building on top of AI, so Copilot, Claude, Cursor — whatever you normally reach for — are all fair game. The one rule: own what you submit. On the follow-up call we'll go deep on your choices, so be ready to defend every line as if you wrote it by hand.
 
