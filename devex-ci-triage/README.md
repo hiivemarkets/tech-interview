@@ -4,6 +4,8 @@ When CI fails on a pull request, engineers waste time scrolling through raw logs
 
 You're building a GitHub Action that does that first pass automatically. When a build fails on a PR, it reads the failed jobs' logs and posts a comment on the PR summarizing what broke and where to start.
 
+This is a takehome exercise. Work on it on your own time; expect a follow-up call where we walk through your code together and extend it.
+
 ## How this runs
 
 There's no real GitHub or CI here. This is a plain program that runs on your laptop. The functions you build against are already written for you in `src/fixtures.ts` — they return canned data and print the "PR comment" to your terminal. You write your code as if it were a real Action; the runtime is just a local process.
@@ -53,3 +55,25 @@ And note: **this Action runs again every time someone pushes to the PR.**
 - Help the reader judge how much to trust each result, rather than presenting the model's guesses as fact.
 
 Start simple — get a plain comment posting first, then make it good. There's no single right answer; the interesting part is what you do when the model doesn't cooperate, and what a good PR comment actually looks like.
+
+## Submitting
+
+Aim for a few focused hours; please don't sink more than ~3 days into it. If you run out of time, leave a note on what you'd do next — we'd rather see a clear stopping point than an all-nighter.
+
+**AI tools.** Use them. This role is about building on top of AI, so Copilot, Claude, Cursor — whatever you normally reach for — are all fair game. The one rule: own what you submit. On the follow-up call we'll go deep on your choices, so be ready to defend every line as if you wrote it by hand.
+
+**What to send back.** A branch or repo we can run, plus a short note (a few paragraphs is plenty): how to run it, the tradeoffs you made, what you'd do with more time, and anything you deliberately left out. Paste or screenshot the PR comment your code produces so we can see the output without running it.
+
+**Scope.** You don't need real GitHub auth, a deployed Action, a UI, or tests for the provided fixtures. Spend your time on the triage logic and the comment.
+
+## Going further (optional)
+
+If you have time and want to push it, any of these are fair game — none are required:
+
+- Scale: a build with 200 failed jobs, each `classify` call slow, and GitHub truncating very long comments. Now concurrency, caching, timeouts, and comment size start to matter.
+- Dedupe identical failures across jobs (same root cause, many red jobs → one line).
+- Only re-post or update the comment when the result actually changed.
+- Collapse the comment when everything passes on a later run, rather than leaving a stale wall of red.
+- Re-classify low-confidence results with more context (the raw log, related jobs).
+- Cache across runs, keyed by log content.
+- Add a summary status line the team could grep or build a dashboard from.
