@@ -65,15 +65,3 @@ Aim for a few focused hours; please don't sink more than ~3 days into it. If you
 **What to send back.** A branch or repo we can run, plus a short note (a few paragraphs is plenty): how to run it, the tradeoffs you made, what you'd do with more time, and anything you deliberately left out. Paste or screenshot the PR comment your code produces so we can see the output without running it.
 
 **Scope.** You don't need real GitHub auth, a deployed Action, a UI, or tests for the provided fixtures. Spend your time on the triage logic and the comment.
-
-## Going further (optional)
-
-If you have time and want to push it, any of these are fair game — none are required:
-
-- Scale: a build with 200 failed jobs, each `classify` call slow, and GitHub truncating very long comments. Now concurrency, caching, timeouts, and comment size start to matter.
-- Dedupe identical failures across jobs (same root cause, many red jobs → one line).
-- Only re-post or update the comment when the result actually changed.
-- Collapse the comment when everything passes on a later run, rather than leaving a stale wall of red.
-- Re-classify low-confidence results with more context (the raw log, related jobs).
-- Cache across runs, keyed by log content.
-- Add a summary status line the team could grep or build a dashboard from.
